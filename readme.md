@@ -1,0 +1,1 @@
+An addon to [faker](https://faker.readthedocs.io/en/stable/index.html) that generates characteristic sequences of random numbers for use in tests and mockups.
