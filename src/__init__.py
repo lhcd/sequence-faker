@@ -1,21 +1,35 @@
 from faker import Faker
 from faker.providers import BaseProvider
+from noise import snoise2
 
 from random import random
-from noise import snoise2
+from functools import reduce
+import math
+import operator
 
 
 class SequenceFaker(BaseProvider):
     """A faker provider to provide random number sequences"""
+    SINUSOIDAL_SETS = [
+        (lambda x: math.sin(x * 38)),
+        (lambda x: math.sin(x * 10)),
+        (lambda x: math.cos(x * 80)),
+        (lambda x: math.cos(x * 2)),
+    ]
 
-    def uniform(i, min, max):
-        return (random() * (max - min))
+    def product(self, iterable):
+        return reduce(operator.mul, iterable, 1)
 
-    def perlin(i, min, max):
-        return ((snoise2(x=i, y=0) + 1)/2 * (max - min))
+    def uniform(self, i, min, max):
+        return min + (random() * (max - min))
 
-    def sinusoidal(i, min, max):
-        pass
+    def perlin(self, i, min, max):
+        return min + ((snoise2(x=i, y=0) + 1)/2 * (max - min))
+
+    def sinusoidal(self, i, min, max):
+        return (self.product([
+                    x(i) for x in self.SINUSOIDAL_SETS
+                ])/2 + .5) * (max - min) + min
 
     SEQUENCE_TYPES = {
         'UNIFORM': uniform,
@@ -42,7 +56,7 @@ class SequenceFaker(BaseProvider):
         try:
             return [
                 self.round_value(
-                    value=self.SEQUENCE_TYPES[sequence_type](i, 0, 1),
+                    value=self.SEQUENCE_TYPES[sequence_type](self, i, min, max),
                     should_round=should_round,
                     ndigits=ndigits
                 )
@@ -52,7 +66,3 @@ class SequenceFaker(BaseProvider):
             raise KeyError(
                 'The sequence type "{}" does not exist.'.format(e.args[0])
             )
-
-
-fake = Faker()
-fake.add_provider(SequenceFaker)
