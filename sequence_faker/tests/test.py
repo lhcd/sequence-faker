@@ -1,9 +1,12 @@
 import unittest
+import random
+
 from faker import Faker
 from sequence_faker.src import SequenceFaker
 
 class TestSequenceFaker(unittest.TestCase):
     def setUp(self):
+        random.seed(0)
         self.fake = Faker()
         self.fake.add_provider(SequenceFaker)
 
@@ -28,4 +31,12 @@ class TestSequenceFaker(unittest.TestCase):
 
 
     def test_hardcoded_sequences(self):
-        pass
+        expected_sequences = {
+            'UNIFORM': [7, 5, -2, -5, 0, -2, 6, -4, 0, 2],
+            'SINUSOIDAL': [0, 0, 3, -2, -1, -1, 2, 1, 4, -2],
+            'PERLIN': [0, -1, 0, 2, 1, 7, 0, -8, -2, 0],
+        }
+
+        for sequence_type in SequenceFaker.SEQUENCE_TYPES:
+            actual = self.fake.sequence(sequence_type=sequence_type, should_round=True, ndigits=None, min=-10, max=10)
+            self.assertCountEqual(actual, expected_sequences[sequence_type])
