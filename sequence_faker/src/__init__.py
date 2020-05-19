@@ -66,3 +66,4 @@ class SequenceFaker(BaseProvider):
             raise KeyError(
                 'The sequence type "{}" does not exist.'.format(e.args[0])
             )
+
