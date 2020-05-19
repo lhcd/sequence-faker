@@ -4,7 +4,7 @@ Example usage:
 
 ```python
 from faker import Faker
-from src import SequenceFaker
+from sequence_faker.src import SequenceFaker
 
 fake = Faker()
 fake.add_provider(SequenceFaker)
