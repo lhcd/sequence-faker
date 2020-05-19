@@ -9,6 +9,7 @@ import operator
 
 class SequenceFaker(BaseProvider):
     """A faker provider to provide random number sequences"""
+
     SINUSOIDAL_SETS = [
         (lambda x: math.sin(x * 38)),
         (lambda x: math.sin(x * 10)),
@@ -23,17 +24,17 @@ class SequenceFaker(BaseProvider):
         return min + (random() * (max - min))
 
     def perlin(self, i, min, max):
-        return min + ((snoise2(x=i, y=0) + 1)/2 * (max - min))
+        return min + ((snoise2(x=i, y=0) + 1) / 2 * (max - min))
 
     def sinusoidal(self, i, min, max):
-        return (self.product([
-                    x(i) for x in self.SINUSOIDAL_SETS
-                ])/2 + .5) * (max - min) + min
+        return (self.product([x(i) for x in self.SINUSOIDAL_SETS]) / 2 + 0.5) * (
+            max - min
+        ) + min
 
     SEQUENCE_TYPES = {
-        'UNIFORM': uniform,
-        'SINUSOIDAL': sinusoidal,
-        'PERLIN': perlin,
+        "UNIFORM": uniform,
+        "SINUSOIDAL": sinusoidal,
+        "PERLIN": perlin,
     }
 
     def round_value(self, value, should_round, ndigits):
@@ -43,23 +44,21 @@ class SequenceFaker(BaseProvider):
 
     def sequence(
         self,
-        sequence_type='UNIFORM',
+        sequence_type="UNIFORM",
         min=0,
         max=1,
         count=10,
         should_round=False,
-        ndigits=2
+        ndigits=2,
     ):
         try:
             return [
                 self.round_value(
                     value=self.SEQUENCE_TYPES[sequence_type](self, i, min, max),
                     should_round=should_round,
-                    ndigits=ndigits
+                    ndigits=ndigits,
                 )
                 for i in range(count)
             ]
         except KeyError as e:
-            raise KeyError(
-                'The sequence type "{}" does not exist.'.format(e.args[0])
-            )
+            raise KeyError('The sequence type "{}" does not exist.'.format(e.args[0]))
