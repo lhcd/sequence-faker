@@ -2,7 +2,7 @@ import unittest
 import random
 
 from faker import Faker
-from sequence_faker.src import SequenceFaker
+from sequence_faker.sequence_faker import SequenceFaker
 
 class TestSequenceFaker(unittest.TestCase):
     def setUp(self):
@@ -40,3 +40,4 @@ class TestSequenceFaker(unittest.TestCase):
         for sequence_type in SequenceFaker.SEQUENCE_TYPES:
             actual = self.fake.sequence(sequence_type=sequence_type, should_round=True, ndigits=None, min=-10, max=10)
             self.assertCountEqual(actual, expected_sequences[sequence_type])
+

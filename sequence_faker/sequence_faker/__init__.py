@@ -1,4 +1,3 @@
-from faker import Faker
 from faker.providers import BaseProvider
 from noise import snoise2
 
@@ -35,8 +34,6 @@ class SequenceFaker(BaseProvider):
         'UNIFORM': uniform,
         'SINUSOIDAL': sinusoidal,
         'PERLIN': perlin,
-        # 'SMOOTH_NOISE': ,
-        # 'SHARP_NOISE': ,
     }
 
     def round_value(self, value, should_round, ndigits):
@@ -66,4 +63,3 @@ class SequenceFaker(BaseProvider):
             raise KeyError(
                 'The sequence type "{}" does not exist.'.format(e.args[0])
             )
-
